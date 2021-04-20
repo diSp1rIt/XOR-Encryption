@@ -119,5 +119,5 @@ void print_hex(const unsigned char *data, const int len_data, const int column_c
 
 
 void usage(const char *filename) {
-	printf("Usage: %s <input> <output>\n", filename);
+	printf("Usage: %s <input file> <output file>\n", filename);
 }
