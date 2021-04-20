@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "math.h"
-#include "filexorcryptor.h"
+#include "libs/filexorcryptor.h"
 
 
 void usage(const char *filename);
