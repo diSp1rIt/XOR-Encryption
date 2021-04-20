@@ -1,21 +1,17 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-#include "sys/stat.h"
-#include "fcntl.h"
 #include "math.h"
+#include "filexorcryptor.h"
 
 
 void usage(const char *filename);
-void crypt(char *data, const char *key, int data_len, int key_len);
 void load_key(const char *filename);
 void print_hex(const unsigned char *data, int len_data, int column_count, const char *separator);
 
 
 time_t seconds;
-int file_input, file_output;
 unsigned char key[1024];
-unsigned char buffer[1024];
 char *message;
 int message_len;
 int key_length = 0;
@@ -36,36 +32,13 @@ int main(int argc, char const *argv[]) {
 	print_hex(key, key_length, 16, "");
 	printf("--------- END XOR KEY ----------\n");
 
-	file_input = open(argv[1], O_RDONLY, S_IWUSR|S_IRUSR);
-	if (file_input == -1) {
-		printf("Error opening file. Check for exists\n");
-		return -1;
-	}
+	open_input_file(argv[1]);
+	open_output_file(argv[2]);
 
-	file_output = open(argv[2], O_WRONLY|O_CREAT|O_TRUNC, S_IWUSR|S_IRUSR);
-	if (file_output == -1) {
-		printf("Error creating file.");
-		return -1;
-	}
+	crypt_file(key, key_length);
 
-	while (1) {
-		int bytes = read(file_input, buffer, key_length);
-		if (bytes == 0)
-			break;
-		crypt(buffer, key, bytes, key_length);
-		write(file_output, buffer, bytes);
-	}
-
-	close(file_input);
-	close(file_output);
+	close_all();
 	return 0;
-}
-
-
-void crypt(char *data, const char *key, int data_len, int key_len) {
-	for (int i = 0; i < data_len; i++) {
-		data[i] = data[i] ^ key[i % key_len];
-	}
 }
 
 
