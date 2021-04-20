@@ -3,7 +3,6 @@
 #include "string.h"
 #include "sys/stat.h"
 #include "fcntl.h"
-#include "time.h"
 #include "math.h"
 
 
@@ -23,13 +22,10 @@ int key_length = 0;
 
 
 int main(int argc, char const *argv[]) {
-	if (argc != 2) {
+	if (argc < 2) {
 		usage(argv[0]);
 		exit(-1);
 	}
-
-	seconds = time(NULL);
-	printf("Time is: %d\n", seconds);
 
 	message = (char *)malloc(1024 * sizeof(char));
 	strcpy(message, argv[1]);
@@ -131,5 +127,5 @@ void print_hex(const unsigned char *data, const int len_data, const int column_c
 
 
 void usage(const char *filename) {
-	printf("Usage: %s <message>\n", filename);
+	printf("Usage: %s [message][-f | --file <file>]\n", filename);
 }
