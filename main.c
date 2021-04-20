@@ -11,6 +11,7 @@ void usage(void);
 void encrypt(char *data, const char *key, int data_len, int key_len);
 void decrypt(char *data, const char *key, int data_len, int  key_len);
 void load_key(const char *filename);
+void print_hex(const unsigned char *data, int len_data, int column_count, const char *separator);
 
 
 time_t seconds;
@@ -37,31 +38,27 @@ int main(int argc, char const *argv[]) {
 	printf("Key length: %d\n", key_length);
 
 	printf("Key:\n");
-	for (int i = 0; i < key_length; i += 16) {
-		for (int j = 0; j < 16; j++) {
-			if (j + i < key_length)
-				printf("%x ", key[i + j]);
-		}
-		printf("\n");
-	}
+	printf("-------- START XOR KEY ---------\n");
+	print_hex(key, key_length, 16, "");
+	printf("--------- END XOR KEY ----------\n");
 	printf("\n");
 
-	printf("Message: %s\n", message);
+	printf("Message: %s\n\n", message);
+
+	printf("Hex message:\n");
+	print_hex(message, message_len, 16, "");
+	printf("\n");
 
 	encrypt(message, key, message_len, key_length);
 
-	printf("Crypted message: ");
-	for (int i = 0; i < message_len; i++) {
-		printf("%x ", message[i]);
-	}
+	printf("Crypted message:\n");
+	print_hex(message, message_len, 16, "");
 	printf("\n");
 
 	decrypt(message, key, message_len, key_length);
 
-	printf("Derypted message: ");
-	for (int i = 0; i < message_len; i++) {
-		printf("%c ", message[i]);
-	}
+	printf("Derypted message:\n");
+	print_hex(message, message_len, 16, "");
 	printf("\n");	
 
 	free(message);
@@ -107,5 +104,25 @@ void load_key(const char *filename) {
 	if (close(fd) == -1) {
 		printf("[-] Error closing \"%s\".\n", filename);
 		exit(-1);
+	}
+}
+
+
+void print_hex(const unsigned char *data, const int len_data, const int column_count, const char *separator) {
+	char buffer[3];
+	for (int i = 0; i < len_data; i += column_count) {
+		for (int j = 0; j < column_count; j++) {
+			if (i + j < len_data) {
+				sprintf(buffer, "%x", data[i + j]);
+				if (strlen(buffer) == 1) {
+					buffer[1] = buffer[0];
+					buffer[0] = '0';
+				}
+				printf("%s", buffer);
+				if (j != column_count - 1)
+					printf("%s", separator);
+			}
+		}
+		printf("\n");
 	}
 }
