@@ -24,7 +24,7 @@ int key_length = 0;
 int main(int argc, char const *argv[]) {
 	if (argc != 3) {
 		usage(argv[0]);
-		exit(-1);
+		return -1;
 	}
 
 	load_key("xor.key");
@@ -39,13 +39,13 @@ int main(int argc, char const *argv[]) {
 	file_input = open(argv[1], O_RDONLY, S_IWUSR|S_IRUSR);
 	if (file_input == -1) {
 		printf("Error opening file. Check for exists\n");
-		exit(-1);
+		return -1;
 	}
 
 	file_output = open(argv[2], O_WRONLY|O_CREAT|O_TRUNC, S_IWUSR|S_IRUSR);
 	if (file_output == -1) {
 		printf("Error creating file.");
-		exit(-1);
+		return -1;
 	}
 
 	while (1) {
