@@ -14,22 +14,19 @@ void print_hex(const unsigned char *data, int len_data, int column_count, const 
 
 
 time_t seconds;
-int fd;
+int file_input, file_output;
 unsigned char key[1024];
+unsigned char buffer[1024];
 char *message;
 int message_len;
 int key_length = 0;
 
 
 int main(int argc, char const *argv[]) {
-	if (argc < 2) {
+	if (argc != 3) {
 		usage(argv[0]);
 		exit(-1);
 	}
-
-	message = (char *)malloc(1024 * sizeof(char));
-	strcpy(message, argv[1]);
-	message_len = strlen(message);
 
 	load_key("xor.key");
 
@@ -39,27 +36,29 @@ int main(int argc, char const *argv[]) {
 	printf("-------- START XOR KEY ---------\n");
 	print_hex(key, key_length, 16, "");
 	printf("--------- END XOR KEY ----------\n");
-	printf("\n");
 
-	printf("Message: %s\n\n", message);
+	file_input = open(argv[1], O_RDONLY, S_IWUSR|S_IRUSR);
+	if (file_input == -1) {
+		printf("Error opening file. Check for exists\n");
+		exit(-1);
+	}
 
-	printf("Hex message:\n");
-	print_hex(message, message_len, 16, "");
-	printf("\n");
+	file_output = open(argv[2], O_WRONLY|O_CREAT|O_TRUNC, S_IWUSR|S_IRUSR);
+	if (file_output == -1) {
+		printf("Error creating file.");
+		exit(-1);
+	}
 
-	encrypt(message, key, message_len, key_length);
+	while (1) {
+		int bytes = read(file_input, buffer, key_length);
+		if (bytes == 0)
+			break;
+		encrypt(buffer, key, bytes, key_length);
+		write(file_output, buffer, bytes);
+	}
 
-	printf("Crypted message:\n");
-	print_hex(message, message_len, 16, "");
-	printf("\n");
-
-	decrypt(message, key, message_len, key_length);
-
-	printf("Derypted message:\n");
-	print_hex(message, message_len, 16, "");
-	printf("\n");	
-
-	free(message);
+	close(file_input);
+	close(file_output);
 	return 0;
 }
 
@@ -127,5 +126,5 @@ void print_hex(const unsigned char *data, const int len_data, const int column_c
 
 
 void usage(const char *filename) {
-	printf("Usage: %s [message][-f | --file <file>]\n", filename);
+	printf("Usage: %s <input> <output>\n", filename);
 }
