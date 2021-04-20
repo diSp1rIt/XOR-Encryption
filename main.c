@@ -10,6 +10,7 @@
 void usage(void);
 void encrypt(char *data, const char *key, int data_len, int key_len);
 void decrypt(char *data, const char *key, int data_len, int  key_len);
+void load_key(const char *filename);
 
 
 time_t seconds;
@@ -27,26 +28,11 @@ int main(int argc, char const *argv[]) {
 	seconds = time(NULL);
 	printf("Time is: %d\n", seconds);
 
-	fd = open("xor.key", O_RDONLY, S_IRUSR|S_IWUSR);
-	if (fd == -1)
-		exit(-1);
-
 	message = (char *)malloc(1024 * sizeof(char));
 	strcpy(message, argv[1]);
 	message_len = strlen(message);
 
-	for (int i = 0; i < 1024; i++) {
-		char buffer;
-		if (read(fd, &buffer, 1) == 0) {
-			key_length = i + 1;
-			break;
-		}
-		else {
-			key[i] = buffer;
-		}
-	}
-	if (key_length == 0)
-		key_length = 1024;
+	load_key("xor.key");
 
 	printf("Key length: %d\n", key_length);
 
@@ -79,7 +65,6 @@ int main(int argc, char const *argv[]) {
 	printf("\n");	
 
 	free(message);
-	close(fd);
 	return 0;
 }
 
@@ -94,5 +79,33 @@ void encrypt(char *data, const char *key, int data_len, int key_len) {
 void decrypt(char *data, const char *key, int data_len, int key_len) {
 	for (int i = 0; i < data_len; i++) {
 		data[i] = data[i] ^ key[i % key_len];
+	}
+}
+
+void load_key(const char *filename) {
+	int fd;
+	fd = open(filename, O_RDONLY, S_IWUSR|S_IRUSR);
+	if (fd == -1) {
+		printf("[-] Error opening \"%s\" to load key.\n", filename);
+		printf("Be sure the file exists.\n");
+		exit(-1);
+	}
+
+	for (int i = 0; i < 1024; i++) {
+		char buffer;
+		if (read(fd, &buffer, 1) == 0) {
+			key_length = i + 1;
+			break;
+		}
+		else {
+			key[i] = buffer;
+		}
+	}
+	if (key_length == 0)
+		key_length = 1024;
+
+	if (close(fd) == -1) {
+		printf("[-] Error closing \"%s\".\n", filename);
+		exit(-1);
 	}
 }
