@@ -7,8 +7,7 @@
 
 
 void usage(const char *filename);
-void encrypt(char *data, const char *key, int data_len, int key_len);
-void decrypt(char *data, const char *key, int data_len, int  key_len);
+void crypt(char *data, const char *key, int data_len, int key_len);
 void load_key(const char *filename);
 void print_hex(const unsigned char *data, int len_data, int column_count, const char *separator);
 
@@ -53,7 +52,7 @@ int main(int argc, char const *argv[]) {
 		int bytes = read(file_input, buffer, key_length);
 		if (bytes == 0)
 			break;
-		encrypt(buffer, key, bytes, key_length);
+		crypt(buffer, key, bytes, key_length);
 		write(file_output, buffer, bytes);
 	}
 
@@ -63,18 +62,12 @@ int main(int argc, char const *argv[]) {
 }
 
 
-void encrypt(char *data, const char *key, int data_len, int key_len) {
+void crypt(char *data, const char *key, int data_len, int key_len) {
 	for (int i = 0; i < data_len; i++) {
 		data[i] = data[i] ^ key[i % key_len];
 	}
 }
 
-
-void decrypt(char *data, const char *key, int data_len, int key_len) {
-	for (int i = 0; i < data_len; i++) {
-		data[i] = data[i] ^ key[i % key_len];
-	}
-}
 
 void load_key(const char *filename) {
 	int fd;
