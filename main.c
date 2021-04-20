@@ -7,7 +7,7 @@
 #include "math.h"
 
 
-void usage(void);
+void usage(const char *filename);
 void encrypt(char *data, const char *key, int data_len, int key_len);
 void decrypt(char *data, const char *key, int data_len, int  key_len);
 void load_key(const char *filename);
@@ -23,8 +23,10 @@ int key_length = 0;
 
 
 int main(int argc, char const *argv[]) {
-	if (argc != 2)
+	if (argc != 2) {
+		usage(argv[0]);
 		exit(-1);
+	}
 
 	seconds = time(NULL);
 	printf("Time is: %d\n", seconds);
@@ -125,4 +127,9 @@ void print_hex(const unsigned char *data, const int len_data, const int column_c
 		}
 		printf("\n");
 	}
+}
+
+
+void usage(const char *filename) {
+	printf("Usage: %s <message>\n", filename);
 }
