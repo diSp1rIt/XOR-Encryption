@@ -9,13 +9,7 @@ using namespace std;
 
 
 void usage(string filename);
-void load_key(const string filename);
 void print_hex(const unsigned char *data, int len_data, int column_count, const string separator);
-
-
-unsigned char key[1024];
-char *message;
-int key_length = 0;
 
 
 int main(int argc, char const *argv[]) {
@@ -24,43 +18,18 @@ int main(int argc, char const *argv[]) {
 		return -1;
 	}
 
-	load_key("xor.key");
+	// load_key("xor.key");
 
-	cout << "Key length: " << key_length << endl;
+	// cout << "Key length: " << key_length << endl;
 
-	cout << "Key:" << endl;
-	cout << "-------- START XOR KEY ---------" << endl;
-	print_hex(key, key_length, 16, " ");
-	cout << "--------- END XOR KEY ----------" << endl;
+	// cout << "Key:" << endl;
+	// cout << "-------- START XOR KEY ---------" << endl;
+	// print_hex(key, key_length, 16, " ");
+	// cout << "--------- END XOR KEY ----------" << endl;
 
-	crypt_file(string(argv[1]), string(argv[2]), key, key_length);
+	crypt_file(string(argv[1]), string(argv[2]), "xor.key");
 
 	return 0;
-}
-
-
-void load_key(const string filename) {
-	ifstream fd (filename);
-	if (!fd.is_open()) {
-		cout << "[-] Error opening \"" << filename << "\" to load key." << endl;;
-		cout << "Be sure the file exists." << endl;
-		exit(-1);
-	}
-
-	for (int i = 0; i < 1024; i++) {
-		char buffer;
-		if (fd.eof()) {
-			key_length = i + 1;
-			break;
-		} else {
-			fd.read(&buffer, 1);
-			key[i] = buffer;
-		}
-	}
-	if (key_length == 0)
-		key_length = 1024;
-
-	fd.close();
 }
 
 

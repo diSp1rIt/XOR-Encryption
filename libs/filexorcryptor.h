@@ -7,6 +7,6 @@
 
 using namespace std;
 
-void crypt_file(const string input_file, const string output_file,const unsigned char *key, int key_length);
+void crypt_file(const string input_file, const string output_file, const string key);
 
 # endif
