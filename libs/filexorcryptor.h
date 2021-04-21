@@ -1,18 +1,12 @@
 # ifndef FILEXORCRYPTOR_LIB_H
 # define FILEXORCRYPTOR_LIB_H
 
-#include "sys/stat.h"
-#include "fcntl.h"
-#include "stdio.h"
-#include "stdlib.h"
+#include <fstream>
+#include <string>
+#include <iostream>
 
-static int input_file_d, output_file_d;
-static char buffer[1024];
+using namespace std;
 
-
-void open_input_file(const char *filename);
-void open_output_file(const char *filename);
-void close_all(void);
-void crypt_file(const char *key, int key_length);
+void crypt_file(const string input_file, const string output_file,const unsigned char *key, int key_length);
 
 # endif
