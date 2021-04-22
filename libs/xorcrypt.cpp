@@ -62,3 +62,14 @@ void crypt_file(const string input_file, const string output_file, const string 
 	if (output.is_open())
 		output.close();
 }
+
+
+void crypt_text(const char *input, char *output, const unsigned int len, const string key_file) {
+	load_key(key_file);
+
+	unsigned int i = 0;
+	for (unsigned int j = 0; j < len; j++) {
+		output[j] = input[j] ^ key[i];
+		i = (i + 1) % key_length; 
+	}
+}
