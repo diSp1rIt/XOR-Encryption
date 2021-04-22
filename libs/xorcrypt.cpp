@@ -1,4 +1,4 @@
-#include "filexorcryptor.h"
+#include "xorcrypt.h"
 
 
 static unsigned char *key= new unsigned char [1024];

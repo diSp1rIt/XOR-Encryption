@@ -1,5 +1,5 @@
-# ifndef FILEXORCRYPTOR_LIB_H
-# define FILEXORCRYPTOR_LIB_H
+# ifndef XORCRYPT_LIB_H
+# define XORCRYPT_LIB_H
 
 #include <fstream>
 #include <string>

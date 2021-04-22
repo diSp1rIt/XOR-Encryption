@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include "libs/filexorcryptor.h"
+#include "libs/xorcrypt.h"
 
 using namespace std;
 
