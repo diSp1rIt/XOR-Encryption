@@ -5,7 +5,9 @@ Don't use this script to encrypt any important files
 # Installing
 You can compile program from source code:
 ```bash
-g++ main.cpp libs/xorcrypt.cpp libs/argparser.cpp -Wall -o crypt
+git clone https://github.com/diSp1rIt/XOR-Encryption.git
+cd XOR-Encryption
+make
 ```
 ### Version of compiler:
 ```bash
@@ -13,7 +15,6 @@ g++ --version
 g++ (Debian 10.2.1-6) 10.2.1 20210110
 Copyright (C) 2020 Free Software Foundation, Inc.
 ```
-> `make` script will be added to project.
 # Usage
 Before start using script you have to create `<key file>`.
 Example:
