@@ -64,12 +64,24 @@ void crypt_file(const string input_file, const string output_file, const string 
 }
 
 
-void crypt_text(const char *input, char *output, const unsigned int len, const string key_file) {
+void crypt_text(const string input, const string output_file, const string key_file) {
+	ofstream output (output_file, ios_base::trunc);
+
+	if (!output.is_open()) {
+		cerr << "Can not open or create file" << endl;
+		exit(-1);
+	}
+
 	load_key(key_file);
 
-	unsigned int i = 0;
-	for (unsigned int j = 0; j < len; j++) {
-		output[j] = input[j] ^ key[i];
-		i = (i + 1) % key_length; 
+	unsigned int j = 0;
+	for (unsigned int i = 0; i < input.size(); i++) {
+		char byte;
+		byte = input[i] ^ key[j];
+		output.write(&byte, 1);
+		j = (j + 1) % key_length;
 	}
+
+	if (output.is_open())
+		output.close();
 }
