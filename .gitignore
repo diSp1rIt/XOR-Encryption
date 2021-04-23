@@ -1,2 +1,6 @@
 xor.key
 main
+crypt
+out
+in.txt
+decrypted.txt
